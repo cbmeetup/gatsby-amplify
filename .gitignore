@@ -71,3 +71,4 @@ yarn-error.log
 # AWS Amplify
 .amplifyrc
 amplify
+aws-exports.js
