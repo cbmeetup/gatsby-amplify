@@ -4,7 +4,7 @@ const { createFilePath } = require('gatsby-source-filesystem')
 exports.createPages = ({ graphql, actions }) => {
   const { createPage } = actions
 
-  const eventPage = path.resolve('./src/pages/event.js')
+  const eventPage = path.resolve('./src/templates/event.js')
   return graphql(
     `
       {
@@ -32,18 +32,12 @@ exports.createPages = ({ graphql, actions }) => {
 
     const events = result.data.allMarkdownRemark.edges
 
-    events.forEach((post, index) => {
-      const previous =
-        index === events.length - 1 ? null : events[index + 1].node
-      const next = index === 0 ? null : events[index - 1].node
-
+    events.forEach((event, index) => {
       createPage({
-        path: post.node.fields.slug,
+        path: event.node.fields.slug,
         component: eventPage,
         context: {
-          slug: post.node.fields.slug,
-          previous,
-          next,
+          slug: event.node.fields.slug,
         },
       })
     })
