@@ -1,3 +1,3 @@
-require('bulma/css/bulma.css')
-require('prismjs/themes/prism.css')
-require('prismjs/plugins/line-numbers/prism-line-numbers.css')
+import 'bulma/css/bulma.css'
+import 'prismjs/themes/prism.css'
+import 'prismjs/plugins/line-numbers/prism-line-numbers.css'

@@ -1,7 +1,26 @@
 import React from 'react'
 import PropTypes from 'prop-types'
+import styled from '@emotion/styled'
 
 import { Link, StaticQuery, graphql } from 'gatsby'
+import auth from '../helpers/auth'
+
+const ProfileWrapper = styled.div`
+  display: inline-flex;
+`
+
+const ProfileItem = styled.span`
+  margin: 0 0 0 10px;
+`
+
+const Profile = ({ profile }) => (
+  <ProfileWrapper>
+    <ProfileItem className="image is-24x24">
+      <img className="is-rounded" src={profile.picture} alt="Profile" />
+    </ProfileItem>
+    <ProfileItem>{profile.name}</ProfileItem>
+  </ProfileWrapper>
+)
 
 const Header = ({ siteTitle }) => (
   <StaticQuery
@@ -62,11 +81,28 @@ const Header = ({ siteTitle }) => (
             </div>
 
             <div className="navbar-end">
+              {auth.isAuthenticated() && (
+                <div className="navbar-item">
+                  <Profile profile={auth.getProfile()} />
+                </div>
+              )}
               <div className="navbar-item">
                 <div className="buttons">
-                  <Link to="/" className="button is-light">
-                    Log in
-                  </Link>
+                  {auth.isAuthenticated() ? (
+                    <button
+                      className="button is-danger"
+                      onClick={() => auth.logout()}
+                    >
+                      Log out
+                    </button>
+                  ) : (
+                    <button
+                      className="button is-info"
+                      onClick={() => auth.login()}
+                    >
+                      Log in
+                    </button>
+                  )}
                 </div>
               </div>
             </div>
