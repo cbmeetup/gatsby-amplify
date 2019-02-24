@@ -5,7 +5,7 @@ import { navigate } from 'gatsby'
 class Auth {
   auth0 = new auth0.WebAuth({
     domain: 'leonrodenburg.eu.auth0.com',
-    audience: 'https://master.d1x0szjzq3kz9p.amplifyapp.com/',
+    audience: process.env.GATSBY_AUTH0_AUDIENCE,
     clientID: 'HNB4povCl5Sxy3Ci9ZNiHhLlV5uCvKBx',
     redirectUri: process.env.GATSBY_AUTH0_CALLBACK_URL,
     responseType: 'token id_token',
@@ -91,12 +91,14 @@ class Auth {
   }
 
   isAuthenticated() {
+    if (typeof window === 'undefined') return false
     const isLoggedIn = localStorage.getItem('isLoggedIn')
     const expiresAt = localStorage.getItem('expiresAt')
     return isLoggedIn === 'true' && new Date().getTime() < expiresAt
   }
 
   scheduleRenewal() {
+    if (typeof window === 'undefined') return
     const expiresAt = localStorage.getItem('expiresAt')
     const timeout = expiresAt - Date.now()
     if (timeout > 0) {
