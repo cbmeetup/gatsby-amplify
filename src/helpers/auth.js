@@ -7,7 +7,7 @@ class Auth {
     domain: 'leonrodenburg.eu.auth0.com',
     audience: 'https://master.d1x0szjzq3kz9p.amplifyapp.com/',
     clientID: 'HNB4povCl5Sxy3Ci9ZNiHhLlV5uCvKBx',
-    redirectUri: 'http://localhost:8000/callback',
+    redirectUri: process.env.GATSBY_AUTH0_CALLBACK_URL,
     responseType: 'token id_token',
     scope: 'openid profile',
   })
