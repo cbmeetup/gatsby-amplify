@@ -101,7 +101,7 @@ const Header = ({ siteTitle }) => {
                 </div>
               </div>
 
-              <div className="navbar-end is-active">
+              <div className="navbar-end">
                 {auth.isAuthenticated() && (
                   <div className="navbar-item">
                     <Profile profile={auth.getProfile()} />
