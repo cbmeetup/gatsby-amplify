@@ -1,6 +1,7 @@
-import React from 'react'
+import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 import styled from '@emotion/styled'
+import classNames from 'classnames'
 
 import { Link, StaticQuery, graphql } from 'gatsby'
 import auth from '../helpers/auth'
@@ -22,96 +23,117 @@ const Profile = ({ profile }) => (
   </ProfileWrapper>
 )
 
-const Header = ({ siteTitle }) => (
-  <StaticQuery
-    query={graphql`
-      query {
-        allMarkdownRemark(
-          sort: { fields: [frontmatter___date], order: ASC }
-          limit: 1000
-        ) {
-          edges {
-            node {
-              fields {
-                slug
-              }
-              frontmatter {
-                title
-                date
+const Header = ({ siteTitle }) => {
+  const [isMenuShown, setMenuShown] = useState(false)
+  return (
+    <StaticQuery
+      query={graphql`
+        query {
+          allMarkdownRemark(
+            sort: { fields: [frontmatter___date], order: ASC }
+            limit: 1000
+          ) {
+            edges {
+              node {
+                fields {
+                  slug
+                }
+                frontmatter {
+                  title
+                  date
+                }
               }
             }
           }
         }
-      }
-    `}
-    render={data => (
-      <header>
-        <nav
-          className="navbar is-primary"
-          role="navigation"
-          aria-label="main navigation"
-        >
-          <div className="navbar-brand">
-            <Link to="/" className="navbar-item">
-              {siteTitle}
-            </Link>
-          </div>
-
-          <div id="navbar" className="navbar-menu">
-            <div className="navbar-start">
+      `}
+      render={data => (
+        <header>
+          <nav
+            className="navbar is-primary"
+            role="navigation"
+            aria-label="main navigation"
+          >
+            <div className="navbar-brand">
               <Link to="/" className="navbar-item">
-                Home
+                {siteTitle}
               </Link>
 
-              <div className="navbar-item has-dropdown is-hoverable">
-                <span className="navbar-link">Events</span>
-
-                <div className="navbar-dropdown">
-                  {data.allMarkdownRemark.edges.map(edge => (
-                    <Link
-                      to={edge.node.fields.slug}
-                      key={edge.node.fields.slug}
-                      className="navbar-item"
-                    >
-                      {edge.node.frontmatter.title}
-                    </Link>
-                  ))}
-                </div>
-              </div>
+              <span
+                className={classNames('navbar-burger', {
+                  'is-active': isMenuShown,
+                })}
+                aria-label="menu"
+                aria-expanded="false"
+                onClick={() => setMenuShown(!isMenuShown)}
+              >
+                <span aria-hidden="true" />
+                <span aria-hidden="true" />
+                <span aria-hidden="true" />
+              </span>
             </div>
 
-            <div className="navbar-end">
-              {auth.isAuthenticated() && (
+            <div
+              id="navbar"
+              className={classNames('navbar-menu', {
+                'is-active': isMenuShown,
+              })}
+            >
+              <div className="navbar-start">
+                <Link to="/" className="navbar-item">
+                  Home
+                </Link>
+
+                <div className="navbar-item has-dropdown is-hoverable">
+                  <span className="navbar-link">Events</span>
+
+                  <div className="navbar-dropdown">
+                    {data.allMarkdownRemark.edges.map(edge => (
+                      <Link
+                        to={edge.node.fields.slug}
+                        key={edge.node.fields.slug}
+                        className="navbar-item"
+                      >
+                        {edge.node.frontmatter.title}
+                      </Link>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              <div className="navbar-end is-active">
+                {auth.isAuthenticated() && (
+                  <div className="navbar-item">
+                    <Profile profile={auth.getProfile()} />
+                  </div>
+                )}
                 <div className="navbar-item">
-                  <Profile profile={auth.getProfile()} />
-                </div>
-              )}
-              <div className="navbar-item">
-                <div className="buttons">
-                  {auth.isAuthenticated() ? (
-                    <button
-                      className="button is-danger"
-                      onClick={() => auth.logout()}
-                    >
-                      Log out
-                    </button>
-                  ) : (
-                    <button
-                      className="button is-info"
-                      onClick={() => auth.login()}
-                    >
-                      Log in
-                    </button>
-                  )}
+                  <div className="buttons">
+                    {auth.isAuthenticated() ? (
+                      <button
+                        className="button is-danger"
+                        onClick={() => auth.logout()}
+                      >
+                        Log out
+                      </button>
+                    ) : (
+                      <button
+                        className="button is-info"
+                        onClick={() => auth.login()}
+                      >
+                        Log in
+                      </button>
+                    )}
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-        </nav>
-      </header>
-    )}
-  />
-)
+          </nav>
+        </header>
+      )}
+    />
+  )
+}
 
 Header.propTypes = {
   siteTitle: PropTypes.string,
