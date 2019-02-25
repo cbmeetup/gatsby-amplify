@@ -24,14 +24,14 @@ class Auth {
   handleAuthentication() {
     const loginRedirect = localStorage.getItem('loginRedirect')
     localStorage.removeItem('loginRedirect')
+
     this.auth0.parseHash((err, authResult) => {
       if (authResult && authResult.accessToken && authResult.idToken) {
         this.setSession(authResult)
-        navigate(loginRedirect, { replace: true })
+        navigate(loginRedirect ? loginRedirect : '/', { replace: true })
       } else if (err) {
-        navigate(loginRedirect, { replace: true })
         console.log(err)
-        alert(`Error: ${err.error}. Check the console for further details.`)
+        navigate(loginRedirect ? loginRedirect : '/', { replace: true })
       }
     })
   }
@@ -70,11 +70,8 @@ class Auth {
       if (authResult && authResult.accessToken && authResult.idToken) {
         this.setSession(authResult)
       } else if (err) {
-        this.logout()
         console.log(err)
-        alert(
-          `Could not get a new token (${err.error}: ${err.error_description}).`,
-        )
+        this.logout()
       }
     })
   }
