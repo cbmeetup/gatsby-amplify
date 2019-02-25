@@ -13,13 +13,6 @@ module.exports = {
         name: 'events',
       },
     },
-    {
-      resolve: 'gatsby-source-filesystem',
-      options: {
-        path: `${__dirname}/src/images/`,
-        name: 'images',
-      },
-    },
     'gatsby-plugin-emotion',
     {
       resolve: 'gatsby-transformer-remark',

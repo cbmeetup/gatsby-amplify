@@ -102,11 +102,11 @@ const Header = ({ siteTitle }) => {
               </div>
 
               <div className="navbar-end">
-                {auth.isAuthenticated() && (
-                  <div className="navbar-item">
+                <div className="navbar-item">
+                  {auth.isAuthenticated() && (
                     <Profile profile={auth.getProfile()} />
-                  </div>
-                )}
+                  )}
+                </div>
                 <div className="navbar-item">
                   <div className="buttons">
                     {auth.isAuthenticated() ? (
