@@ -1,6 +1,7 @@
 import auth0 from 'auth0-js'
 import jwtDecode from 'jwt-decode'
 import { navigate } from 'gatsby'
+import storage from 'local-storage-fallback'
 
 class Auth {
   auth0 = new auth0.WebAuth({
@@ -17,13 +18,13 @@ class Auth {
   }
 
   login() {
-    localStorage.setItem('loginRedirect', window.location.pathname)
+    storage.setItem('loginRedirect', window.location.pathname)
     this.auth0.authorize()
   }
 
   handleAuthentication() {
-    const loginRedirect = localStorage.getItem('loginRedirect')
-    localStorage.removeItem('loginRedirect')
+    const loginRedirect = storage.getItem('loginRedirect')
+    storage.removeItem('loginRedirect')
 
     this.auth0.parseHash((err, authResult) => {
       if (authResult && authResult.accessToken && authResult.idToken) {
@@ -37,11 +38,11 @@ class Auth {
   }
 
   getAccessToken() {
-    return localStorage.getItem('accessToken')
+    return storage.getItem('accessToken')
   }
 
   getIdToken() {
-    return localStorage.getItem('idToken')
+    return storage.getItem('idToken')
   }
 
   getProfile() {
@@ -56,13 +57,13 @@ class Auth {
   }
 
   setSession(authResult) {
-    localStorage.setItem('isLoggedIn', 'true')
+    storage.setItem('isLoggedIn', 'true')
 
     let expiresAt = authResult.expiresIn * 1000 + new Date().getTime()
 
-    localStorage.setItem('expiresAt', expiresAt)
-    localStorage.setItem('accessToken', authResult.accessToken)
-    localStorage.setItem('idToken', authResult.idToken)
+    storage.setItem('expiresAt', expiresAt)
+    storage.setItem('accessToken', authResult.accessToken)
+    storage.setItem('idToken', authResult.idToken)
   }
 
   renewSession() {
@@ -77,10 +78,10 @@ class Auth {
   }
 
   logout() {
-    localStorage.removeItem('accessToken')
-    localStorage.removeItem('idToken')
-    localStorage.removeItem('expiresAt')
-    localStorage.removeItem('isLoggedIn')
+    storage.removeItem('accessToken')
+    storage.removeItem('idToken')
+    storage.removeItem('expiresAt')
+    storage.removeItem('isLoggedIn')
 
     clearTimeout(this.tokenRenewalTimeout)
 
@@ -89,14 +90,14 @@ class Auth {
 
   isAuthenticated() {
     if (typeof window === 'undefined') return false
-    const isLoggedIn = localStorage.getItem('isLoggedIn')
-    const expiresAt = localStorage.getItem('expiresAt')
+    const isLoggedIn = storage.getItem('isLoggedIn')
+    const expiresAt = storage.getItem('expiresAt')
     return isLoggedIn === 'true' && new Date().getTime() < expiresAt
   }
 
   scheduleRenewal() {
     if (typeof window === 'undefined') return
-    const expiresAt = localStorage.getItem('expiresAt')
+    const expiresAt = storage.getItem('expiresAt')
     const timeout = expiresAt - Date.now()
     if (timeout > 0) {
       this.tokenRenewalTimeout = setTimeout(() => {
