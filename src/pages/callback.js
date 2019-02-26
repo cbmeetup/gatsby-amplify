@@ -2,7 +2,7 @@ import React from 'react'
 import styled from '@emotion/styled'
 import { navigate } from 'gatsby'
 
-import auth from '../helpers/auth'
+import Auth from '../helpers/auth'
 
 const PaddedDiv = styled.div`
   padding: 10px 15px;
@@ -10,7 +10,7 @@ const PaddedDiv = styled.div`
 
 export default class extends React.Component {
   componentDidMount() {
-    auth.handleAuthentication()
+    new Auth().handleAuthentication()
     navigate('/')
   }
 

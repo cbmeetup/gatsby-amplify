@@ -1,10 +1,10 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import styled from '@emotion/styled'
 import classNames from 'classnames'
 
 import { Link, StaticQuery, graphql } from 'gatsby'
-import auth from '../helpers/auth'
+import Auth from '../helpers/auth'
 
 const ProfileWrapper = styled.div`
   display: inline-flex;
@@ -25,6 +25,11 @@ const Profile = ({ profile }) => (
 
 const Header = ({ siteTitle }) => {
   const [isMenuShown, setMenuShown] = useState(false)
+  const [isClientSide, setClientSide] = useState(false)
+  const [auth] = useState(new Auth())
+  useEffect(() => {
+    setClientSide(true)
+  })
   return (
     <StaticQuery
       query={graphql`
@@ -101,32 +106,34 @@ const Header = ({ siteTitle }) => {
                 </div>
               </div>
 
-              <div className="navbar-end">
-                <div className="navbar-item">
-                  {auth.isAuthenticated() && (
-                    <Profile profile={auth.getProfile()} />
-                  )}
-                </div>
-                <div className="navbar-item">
-                  <div className="buttons">
-                    {auth.isAuthenticated() ? (
-                      <button
-                        className="button is-danger"
-                        onClick={() => auth.logout()}
-                      >
-                        Log out
-                      </button>
-                    ) : (
-                      <button
-                        className="button is-info"
-                        onClick={() => auth.login()}
-                      >
-                        Log in
-                      </button>
+              {isClientSide && (
+                <div className="navbar-end">
+                  <div className="navbar-item">
+                    {auth.isAuthenticated() && (
+                      <Profile profile={auth.getProfile()} />
                     )}
                   </div>
+                  <div className="navbar-item">
+                    <div className="buttons">
+                      {auth.isAuthenticated() ? (
+                        <button
+                          className="button is-danger"
+                          onClick={() => auth.logout()}
+                        >
+                          Log out
+                        </button>
+                      ) : (
+                        <button
+                          className="button is-info"
+                          onClick={() => auth.login()}
+                        >
+                          Log in
+                        </button>
+                      )}
+                    </div>
+                  </div>
                 </div>
-              </div>
+              )}
             </div>
           </nav>
         </header>
