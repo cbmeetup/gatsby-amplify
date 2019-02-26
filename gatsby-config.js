@@ -41,6 +41,11 @@ module.exports = {
       },
     },
     'gatsby-plugin-react-helmet',
-    'gatsby-plugin-purgecss',
+    {
+      resolve: 'gatsby-plugin-purgecss',
+      options: {
+        ignore: 'prismjs/',
+      },
+    },
   ],
 }
