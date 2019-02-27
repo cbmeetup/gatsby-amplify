@@ -44,7 +44,10 @@ module.exports = {
     {
       resolve: 'gatsby-plugin-purgecss',
       options: {
-        ignore: 'prismjs/',
+        ignore: [
+          'prismjs/themes/prism.css',
+          'prismjs/plugins/line-numbers/prism-line-numbers.css',
+        ],
       },
     },
   ],

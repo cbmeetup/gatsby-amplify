@@ -89,14 +89,12 @@ class Auth {
   }
 
   isAuthenticated() {
-    if (typeof window === 'undefined') return false
     const isLoggedIn = storage.getItem('isLoggedIn')
     const expiresAt = storage.getItem('expiresAt')
     return isLoggedIn === 'true' && new Date().getTime() < expiresAt
   }
 
   scheduleRenewal() {
-    if (typeof window === 'undefined') return
     const expiresAt = storage.getItem('expiresAt')
     const timeout = expiresAt - Date.now()
     if (timeout > 0) {
