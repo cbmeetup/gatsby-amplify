@@ -4,7 +4,7 @@ import styled from '@emotion/styled'
 import classNames from 'classnames'
 
 import { Link, graphql, useStaticQuery } from 'gatsby'
-import Auth from '../helpers/auth'
+import auth from '../helpers/auth'
 
 const ProfileWrapper = styled.div`
   display: inline-flex;
@@ -26,7 +26,6 @@ const Profile = ({ profile }) => (
 const Header = ({ siteTitle }) => {
   const [isMenuShown, setMenuShown] = useState(false)
   const [isClientSide, setClientSide] = useState(false)
-  const [auth] = useState(new Auth())
   useEffect(() => {
     setClientSide(true)
   })

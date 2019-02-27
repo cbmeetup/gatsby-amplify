@@ -47,6 +47,7 @@ module.exports = {
         ignore: [
           'prismjs/themes/prism.css',
           'prismjs/plugins/line-numbers/prism-line-numbers.css',
+          'styles/line-numbers.css',
         ],
       },
     },
