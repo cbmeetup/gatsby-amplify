@@ -9,7 +9,7 @@ class Auth {
     audience: process.env.GATSBY_AUTH0_AUDIENCE,
     clientID: 'HNB4povCl5Sxy3Ci9ZNiHhLlV5uCvKBx',
     redirectUri: process.env.GATSBY_AUTH0_CALLBACK_URL,
-    responseType: 'token id_token',
+    responseType: 'id_token',
     scope: 'openid profile',
   })
 
@@ -27,7 +27,7 @@ class Auth {
     storage.removeItem('loginRedirect')
 
     this.auth0.parseHash((err, authResult) => {
-      if (authResult && authResult.accessToken && authResult.idToken) {
+      if (authResult && authResult.idToken) {
         this.setSession(authResult)
         navigate(loginRedirect ? loginRedirect : '/', { replace: true })
       } else if (err) {
@@ -35,10 +35,6 @@ class Auth {
         navigate(loginRedirect ? loginRedirect : '/', { replace: true })
       }
     })
-  }
-
-  getAccessToken() {
-    return storage.getItem('accessToken')
   }
 
   getIdToken() {
@@ -62,13 +58,12 @@ class Auth {
     let expiresAt = authResult.expiresIn * 1000 + new Date().getTime()
 
     storage.setItem('expiresAt', expiresAt)
-    storage.setItem('accessToken', authResult.accessToken)
     storage.setItem('idToken', authResult.idToken)
   }
 
   renewSession() {
     this.auth0.checkSession({}, (err, authResult) => {
-      if (authResult && authResult.accessToken && authResult.idToken) {
+      if (authResult && authResult.idToken) {
         this.setSession(authResult)
       } else if (err) {
         console.log(err)
@@ -78,7 +73,6 @@ class Auth {
   }
 
   logout() {
-    storage.removeItem('accessToken')
     storage.removeItem('idToken')
     storage.removeItem('expiresAt')
     storage.removeItem('isLoggedIn')
