@@ -9,7 +9,7 @@ class Auth {
     audience: process.env.GATSBY_AUTH0_AUDIENCE,
     clientID: 'HNB4povCl5Sxy3Ci9ZNiHhLlV5uCvKBx',
     redirectUri: process.env.GATSBY_AUTH0_CALLBACK_URL,
-    responseType: 'id_token',
+    responseType: 'token id_token',
     scope: 'openid profile',
   })
 
