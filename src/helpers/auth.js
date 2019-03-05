@@ -14,7 +14,7 @@ class Auth {
   })
 
   constructor() {
-    this.renewTokenIfNecessary()
+    this.scheduleTokenRefresh()
   }
 
   login() {
@@ -59,6 +59,8 @@ class Auth {
 
     storage.setItem('expiresAt', expiresAt)
     storage.setItem('idToken', authResult.idToken)
+
+    this.scheduleTokenRefresh()
   }
 
   renewSession() {
@@ -88,11 +90,12 @@ class Auth {
     return isLoggedIn === 'true' && Date.now() < expiresAt
   }
 
-  renewTokenIfNecessary() {
+  scheduleTokenRefresh() {
     const expiresAt = storage.getItem('expiresAt')
     if (!expiresAt) return
 
     const timeout = expiresAt - Date.now()
+    if (this.tokenRenewalTimeout) window.clearInterval(this.tokenRenewalTimeout)
     this.tokenRenewalTimeout = setTimeout(
       () => {
         this.renewSession()
