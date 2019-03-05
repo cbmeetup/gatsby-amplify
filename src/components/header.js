@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 import styled from '@emotion/styled'
 import classNames from 'classnames'
@@ -25,10 +25,6 @@ const Profile = ({ profile }) => (
 
 const Header = ({ siteTitle }) => {
   const [isMenuShown, setMenuShown] = useState(false)
-  const [isClientSide, setClientSide] = useState(false)
-  useEffect(() => {
-    setClientSide(true)
-  })
   const data = useStaticQuery(graphql`
     query {
       allMarkdownRemark(
@@ -103,34 +99,32 @@ const Header = ({ siteTitle }) => {
             </div>
           </div>
 
-          {isClientSide && (
-            <div className="navbar-end">
-              <div className="navbar-item">
-                {auth.isAuthenticated() && (
-                  <Profile profile={auth.getProfile()} />
+          <div className="navbar-end">
+            <div className="navbar-item">
+              {auth.isAuthenticated() && (
+                <Profile profile={auth.getProfile()} />
+              )}
+            </div>
+            <div className="navbar-item">
+              <div className="buttons">
+                {auth.isAuthenticated() ? (
+                  <button
+                    className="button is-danger"
+                    onClick={() => auth.logout()}
+                  >
+                    Log out
+                  </button>
+                ) : (
+                  <button
+                    className="button is-info"
+                    onClick={() => auth.login()}
+                  >
+                    Log in
+                  </button>
                 )}
               </div>
-              <div className="navbar-item">
-                <div className="buttons">
-                  {auth.isAuthenticated() ? (
-                    <button
-                      className="button is-danger"
-                      onClick={() => auth.logout()}
-                    >
-                      Log out
-                    </button>
-                  ) : (
-                    <button
-                      className="button is-info"
-                      onClick={() => auth.login()}
-                    >
-                      Log in
-                    </button>
-                  )}
-                </div>
-              </div>
             </div>
-          )}
+          </div>
         </div>
       </nav>
     </header>
