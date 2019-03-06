@@ -1,3 +1,4 @@
+import React from 'react'
 import auth0 from 'auth0-js'
 import jwtDecode from 'jwt-decode'
 import { navigate } from 'gatsby'
@@ -105,4 +106,9 @@ class Auth {
   }
 }
 
-export default new Auth()
+export const withAuth = WrappedComponent => {
+  const auth = new Auth()
+  return props => <WrappedComponent auth={auth} {...props} />
+}
+
+export default Auth

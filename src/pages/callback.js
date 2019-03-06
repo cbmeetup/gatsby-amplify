@@ -2,15 +2,15 @@ import React from 'react'
 import styled from '@emotion/styled'
 import { navigate } from 'gatsby'
 
-import auth from '../helpers/auth'
+import { withAuth } from '../helpers/auth'
 
 const PaddedDiv = styled.div`
   padding: 10px 15px;
 `
 
-export default class extends React.Component {
+class Callback extends React.Component {
   componentDidMount() {
-    auth.handleAuthentication()
+    this.props.auth.handleAuthentication()
     navigate('/')
   }
 
@@ -18,3 +18,5 @@ export default class extends React.Component {
     return <PaddedDiv>Authenticating...</PaddedDiv>
   }
 }
+
+export default withAuth(Callback)

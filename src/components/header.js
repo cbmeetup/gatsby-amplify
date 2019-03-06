@@ -4,7 +4,7 @@ import styled from '@emotion/styled'
 import classNames from 'classnames'
 
 import { Link, graphql, useStaticQuery } from 'gatsby'
-import auth from '../helpers/auth'
+import { withAuth } from '../helpers/auth'
 
 const ProfileWrapper = styled.div`
   display: inline-flex;
@@ -23,7 +23,7 @@ const Profile = ({ profile }) => (
   </ProfileWrapper>
 )
 
-const Header = ({ siteTitle }) => {
+const Header = ({ siteTitle, auth }) => {
   const [isMenuShown, setMenuShown] = useState(false)
   const data = useStaticQuery(graphql`
     query {
@@ -139,4 +139,4 @@ Header.defaultProps = {
   siteTitle: ``,
 }
 
-export default Header
+export default withAuth(Header)
