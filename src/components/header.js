@@ -4,7 +4,7 @@ import styled from '@emotion/styled'
 import classNames from 'classnames'
 
 import { Link, graphql, useStaticQuery } from 'gatsby'
-import { withAuth } from '../helpers/auth'
+import { WithAuthentication } from '../helpers/auth'
 
 const ProfileWrapper = styled.div`
   display: inline-flex;
@@ -27,7 +27,7 @@ Profile.propTypes = {
   profile: PropTypes.object.isRequired,
 }
 
-const Header = ({ siteTitle, auth }) => {
+const Header = ({ siteTitle }) => {
   const [isMenuShown, setMenuShown] = useState(false)
   const data = useStaticQuery(graphql`
     query {
@@ -103,32 +103,36 @@ const Header = ({ siteTitle, auth }) => {
             </div>
           </div>
 
-          <div className="navbar-end">
-            <div className="navbar-item">
-              {auth.isAuthenticated() && (
-                <Profile profile={auth.getProfile()} />
-              )}
-            </div>
-            <div className="navbar-item">
-              <div className="buttons">
-                {auth.isAuthenticated() ? (
-                  <button
-                    className="button is-info"
-                    onClick={() => auth.logout()}
-                  >
-                    Log out
-                  </button>
-                ) : (
-                  <button
-                    className="button is-info"
-                    onClick={() => auth.login()}
-                  >
-                    Log in
-                  </button>
-                )}
+          <WithAuthentication>
+            {({ auth }) => (
+              <div className="navbar-end">
+                <div className="navbar-item">
+                  {auth.isAuthenticated() && (
+                    <Profile profile={auth.getProfile()} />
+                  )}
+                </div>
+                <div className="navbar-item">
+                  <div className="buttons">
+                    {auth.isAuthenticated() ? (
+                      <button
+                        className="button is-info"
+                        onClick={() => auth.logout()}
+                      >
+                        Log out
+                      </button>
+                    ) : (
+                      <button
+                        className="button is-info"
+                        onClick={() => auth.login()}
+                      >
+                        Log in
+                      </button>
+                    )}
+                  </div>
+                </div>
               </div>
-            </div>
-          </div>
+            )}
+          </WithAuthentication>
         </div>
       </nav>
     </header>
@@ -141,7 +145,6 @@ Header.defaultProps = {
 
 Header.propTypes = {
   siteTitle: PropTypes.string,
-  auth: PropTypes.object,
 }
 
-export default withAuth(Header)
+export default Header

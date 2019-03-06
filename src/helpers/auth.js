@@ -106,6 +106,16 @@ class Auth {
   }
 }
 
+export const WithAuthentication = ({ children }) => {
+  if (typeof children !== 'function')
+    throw new Error(
+      'Authentication component should receive a single render function as a child',
+    )
+
+  const auth = new Auth()
+  return children({ auth })
+}
+
 export const withAuth = WrappedComponent => {
   const auth = new Auth()
   return props => <WrappedComponent auth={auth} {...props} />

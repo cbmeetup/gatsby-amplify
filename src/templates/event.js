@@ -7,7 +7,7 @@ import classNames from 'classnames'
 
 import Layout from '../components/layout'
 import SEO from '../components/seo'
-import { withAuth } from '../helpers/auth'
+import { WithAuthentication } from '../helpers/auth'
 import { GET_ATTENDANCE_QUERY } from '../helpers/apollo'
 
 const ColoredIconButton = ({ buttonClass, iconClass, onClick, children }) => {
@@ -29,7 +29,7 @@ class Event extends React.Component {
   }
 
   render() {
-    const { data, auth } = this.props
+    const { data } = this.props
     const event = data.markdownRemark
     return (
       <Layout>
@@ -53,50 +53,57 @@ class Event extends React.Component {
                     Let us know whether or not you are attending this meetup:
                     <br />
                     <br />
-                    {!auth.isAuthenticated() &&
-                      'You need to log in to attend this meetup.'}
-                    <Query
-                      query={GET_ATTENDANCE_QUERY}
-                      skip={!auth.isAuthenticated()}
-                      variables={{ slug: event.fields.slug }}
-                    >
-                      {({ loading, error, data }) => {
-                        if (loading) return null
-                        if (error) {
-                          return (
-                            <span className="has-text-danger">
-                              Oops! Something went wrong...
-                            </span>
-                          )
-                        }
+                    <WithAuthentication>
+                      {({ auth }) => (
+                        <>
+                          {!auth.isAuthenticated() &&
+                            'You need to log in to attend this meetup.'}
 
-                        if (auth.isAuthenticated()) {
-                          if (data && data.getAttendance != null) {
-                            return (
-                              <ColoredIconButton
-                                buttonClass="is-danger"
-                                iconClass="fa-times"
-                                onClick={() => console.log('Unattending')}
-                              >
-                                Cancel attendance
-                              </ColoredIconButton>
-                            )
-                          } else {
-                            return (
-                              <ColoredIconButton
-                                buttonClass="is-primary"
-                                iconClass="fa-check"
-                                onClick={() => console.log('Attending')}
-                              >
-                                Attend this meetup
-                              </ColoredIconButton>
-                            )
-                          }
-                        } else {
-                          return null
-                        }
-                      }}
-                    </Query>
+                          <Query
+                            query={GET_ATTENDANCE_QUERY}
+                            skip={!auth.isAuthenticated()}
+                            variables={{ slug: event.fields.slug }}
+                          >
+                            {({ loading, error, data }) => {
+                              if (loading) return null
+                              if (error) {
+                                return (
+                                  <span className="has-text-danger">
+                                    Oops! Something went wrong...
+                                  </span>
+                                )
+                              }
+
+                              if (auth.isAuthenticated()) {
+                                if (data && data.getAttendance != null) {
+                                  return (
+                                    <ColoredIconButton
+                                      buttonClass="is-danger"
+                                      iconClass="fa-times"
+                                      onClick={() => console.log('Unattending')}
+                                    >
+                                      Cancel attendance
+                                    </ColoredIconButton>
+                                  )
+                                } else {
+                                  return (
+                                    <ColoredIconButton
+                                      buttonClass="is-primary"
+                                      iconClass="fa-check"
+                                      onClick={() => console.log('Attending')}
+                                    >
+                                      Attend this meetup
+                                    </ColoredIconButton>
+                                  )
+                                }
+                              } else {
+                                return null
+                              }
+                            }}
+                          </Query>
+                        </>
+                      )}
+                    </WithAuthentication>
                   </p>
                 </div>
               </div>
@@ -110,10 +117,9 @@ class Event extends React.Component {
 
 Event.propTypes = {
   data: PropTypes.object.isRequired,
-  auth: PropTypes.object.isRequired,
 }
 
-export default withAuth(Event)
+export default Event
 
 export const query = graphql`
   query EventBySlug($slug: String!) {
