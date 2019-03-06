@@ -116,9 +116,4 @@ export const WithAuthentication = ({ children }) => {
   return children({ auth })
 }
 
-export const withAuth = WrappedComponent => {
-  const auth = new Auth()
-  return props => <WrappedComponent auth={auth} {...props} />
-}
-
 export default Auth
