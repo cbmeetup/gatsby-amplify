@@ -23,6 +23,10 @@ const Profile = ({ profile }) => (
   </ProfileWrapper>
 )
 
+Profile.propTypes = {
+  profile: PropTypes.object.isRequired,
+}
+
 const Header = ({ siteTitle, auth }) => {
   const [isMenuShown, setMenuShown] = useState(false)
   const data = useStaticQuery(graphql`
@@ -131,12 +135,13 @@ const Header = ({ siteTitle, auth }) => {
   )
 }
 
-Header.propTypes = {
-  siteTitle: PropTypes.string,
-}
-
 Header.defaultProps = {
   siteTitle: ``,
+}
+
+Header.propTypes = {
+  siteTitle: PropTypes.string,
+  auth: PropTypes.object,
 }
 
 export default withAuth(Header)

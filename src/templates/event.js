@@ -1,4 +1,5 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 import { graphql } from 'gatsby'
 import { Query } from 'react-apollo'
 import moment from 'moment'
@@ -105,6 +106,11 @@ class Event extends React.Component {
       </Layout>
     )
   }
+}
+
+Event.propTypes = {
+  data: PropTypes.object.isRequired,
+  auth: PropTypes.object.isRequired,
 }
 
 export default withAuth(Event)

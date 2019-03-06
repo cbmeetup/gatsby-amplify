@@ -1,4 +1,5 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 import styled from '@emotion/styled'
 import { navigate } from 'gatsby'
 
@@ -17,6 +18,10 @@ class Callback extends React.Component {
   render() {
     return <PaddedDiv>Authenticating...</PaddedDiv>
   }
+}
+
+Callback.propTypes = {
+  auth: PropTypes.object.isRequired,
 }
 
 export default withAuth(Callback)

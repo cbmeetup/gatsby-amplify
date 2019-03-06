@@ -1,4 +1,5 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 import { graphql, Link } from 'gatsby'
 import moment from 'moment'
 
@@ -17,7 +18,12 @@ export const ViewMeetupButton = ({ to, title }) => (
   </p>
 )
 
-export default ({ data }) => (
+ViewMeetupButton.propTypes = {
+  to: PropTypes.string.isRequired,
+  title: PropTypes.string.isRequired,
+}
+
+const Index = ({ data }) => (
   <Layout>
     <SEO title="Home" />
     <section className="hero is-medium is-primary">
@@ -54,6 +60,12 @@ export default ({ data }) => (
     </section>
   </Layout>
 )
+
+Index.propTypes = {
+  data: PropTypes.object.isRequired,
+}
+
+export default Index
 
 export const query = graphql`
   query {
