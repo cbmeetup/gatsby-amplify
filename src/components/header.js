@@ -109,7 +109,7 @@ const Header = ({ siteTitle, auth }) => {
               <div className="buttons">
                 {auth.isAuthenticated() ? (
                   <button
-                    className="button is-danger"
+                    className="button is-info"
                     onClick={() => auth.logout()}
                   >
                     Log out
