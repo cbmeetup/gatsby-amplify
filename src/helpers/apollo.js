@@ -24,7 +24,7 @@ export const GET_ATTENDANCE_QUERY = gql`
     getAttendance(slug: $slug) {
       userId
       slug
-      signupDatetime
+      registeredAt
     }
   }
 `
@@ -34,7 +34,7 @@ export const ATTEND_MEETUP_MUTATION = gql`
     attendMeetup(slug: $slug) {
       userId
       slug
-      signupDatetime
+      registeredAt
     }
   }
 `
