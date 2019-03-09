@@ -1,4 +1,3 @@
-import React from 'react'
 import auth0 from 'auth0-js'
 import jwtDecode from 'jwt-decode'
 import { navigate } from 'gatsby'
@@ -106,14 +105,15 @@ class Auth {
   }
 }
 
+const auth = new Auth()
+
 export const WithAuthentication = ({ children }) => {
   if (typeof children !== 'function')
     throw new Error(
       'Authentication component should receive a single render function as a child',
     )
 
-  const auth = new Auth()
   return children({ auth })
 }
 
-export default Auth
+export default auth

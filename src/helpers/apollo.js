@@ -1,7 +1,7 @@
 import ApolloClient from 'apollo-boost'
 import fetch from 'isomorphic-fetch'
 import gql from 'graphql-tag'
-import Auth from './auth'
+import auth from './auth'
 
 export const client = new ApolloClient({
   uri: process.env.GATSBY_API_URL,
@@ -10,7 +10,7 @@ export const client = new ApolloClient({
     credentials: 'include',
   },
   request: operation => {
-    const token = new Auth().getIdToken()
+    const token = auth.getIdToken()
     operation.setContext({
       headers: {
         authorization: token,
@@ -22,8 +22,25 @@ export const client = new ApolloClient({
 export const GET_ATTENDANCE_QUERY = gql`
   query GetAttendance($slug: ID!) {
     getAttendance(slug: $slug) {
-      slug
       userId
+      slug
+      signupDatetime
     }
+  }
+`
+
+export const ATTEND_MEETUP_MUTATION = gql`
+  mutation AttendMeetup($slug: ID!) {
+    attendMeetup(slug: $slug) {
+      userId
+      slug
+      signupDatetime
+    }
+  }
+`
+
+export const CANCEL_ATTENDANCE_MUTATION = gql`
+  mutation CancelAttendance($slug: ID!) {
+    cancelAttendance(slug: $slug)
   }
 `
