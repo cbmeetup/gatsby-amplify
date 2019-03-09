@@ -1,9 +1,14 @@
 import auth0 from 'auth0-js'
 import jwtDecode from 'jwt-decode'
 import { navigate } from 'gatsby'
-import storage from 'local-storage-fallback'
+import {
+  isSupported,
+  CookieStorage,
+  MemoryStorage,
+} from 'local-storage-fallback'
 
 class Auth {
+  storage = null
   auth0 = new auth0.WebAuth({
     domain: 'leonrodenburg.eu.auth0.com',
     audience: process.env.GATSBY_AUTH0_AUDIENCE,
@@ -14,17 +19,25 @@ class Auth {
   })
 
   constructor() {
+    if (isSupported('localStorage')) {
+      this.storage = window.localStorage
+    } else if (isSupported('cookieStorage')) {
+      this.storage = new CookieStorage()
+    } else {
+      this.storage = new MemoryStorage()
+    }
+
     this.scheduleTokenRefresh()
   }
 
   login() {
-    storage.setItem('loginRedirect', window.location.pathname)
+    this.storage.setItem('loginRedirect', window.location.pathname)
     this.auth0.authorize()
   }
 
   handleAuthentication() {
-    const loginRedirect = storage.getItem('loginRedirect')
-    storage.removeItem('loginRedirect')
+    const loginRedirect = this.storage.getItem('loginRedirect')
+    this.storage.removeItem('loginRedirect')
 
     this.auth0.parseHash((err, authResult) => {
       if (authResult && authResult.idToken) {
@@ -38,7 +51,7 @@ class Auth {
   }
 
   getIdToken() {
-    return storage.getItem('idToken')
+    return this.storage.getItem('idToken')
   }
 
   getProfile() {
@@ -53,12 +66,12 @@ class Auth {
   }
 
   setSession(authResult) {
-    storage.setItem('isLoggedIn', 'true')
+    this.storage.setItem('isLoggedIn', 'true')
 
-    let expiresAt = authResult.expiresIn * 1000 + new Date().getTime()
+    const expiresAt = authResult.expiresIn * 1000 + new Date().getTime()
 
-    storage.setItem('expiresAt', expiresAt)
-    storage.setItem('idToken', authResult.idToken)
+    this.storage.setItem('expiresAt', expiresAt)
+    this.storage.setItem('idToken', authResult.idToken)
 
     this.scheduleTokenRefresh()
   }
@@ -75,9 +88,9 @@ class Auth {
   }
 
   logout() {
-    storage.removeItem('idToken')
-    storage.removeItem('expiresAt')
-    storage.removeItem('isLoggedIn')
+    this.storage.removeItem('idToken')
+    this.storage.removeItem('expiresAt')
+    this.storage.removeItem('isLoggedIn')
 
     clearTimeout(this.tokenRenewalTimeout)
 
@@ -85,13 +98,13 @@ class Auth {
   }
 
   isAuthenticated() {
-    const isLoggedIn = storage.getItem('isLoggedIn')
-    const expiresAt = storage.getItem('expiresAt')
+    const isLoggedIn = this.storage.getItem('isLoggedIn')
+    const expiresAt = this.storage.getItem('expiresAt')
     return isLoggedIn === 'true' && Date.now() < expiresAt
   }
 
   scheduleTokenRefresh() {
-    const expiresAt = storage.getItem('expiresAt')
+    const expiresAt = this.storage.getItem('expiresAt')
     if (!expiresAt) return
 
     const timeout = expiresAt - Date.now()
