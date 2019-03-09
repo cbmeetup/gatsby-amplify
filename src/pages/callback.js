@@ -1,6 +1,5 @@
 import React, { useEffect } from 'react'
 import styled from '@emotion/styled'
-import { navigate } from 'gatsby'
 
 import { WithAuthentication } from '../helpers/auth'
 
@@ -13,8 +12,7 @@ export default () => (
     {({ auth }) => {
       useEffect(() => {
         auth.handleAuthentication()
-        navigate('/')
-      }, [auth])
+      })
 
       return <PaddedDiv>Authenticating...</PaddedDiv>
     }}
