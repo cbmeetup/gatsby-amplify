@@ -45,6 +45,7 @@ class Auth {
         navigate(loginRedirect ? loginRedirect : '/', { replace: true })
       } else if (err) {
         console.log(err)
+        navigate(loginRedirect ? loginRedirect : '/', { replace: true })
       }
     })
   }
