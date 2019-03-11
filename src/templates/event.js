@@ -33,18 +33,18 @@ const AttendMeetupButton = ({ isAttending, slug }) => (
         mutation={CANCEL_ATTENDANCE_MUTATION}
         refetchQueries={() => ['GetAttendance']}
       >
-        {(cancelAttendance, { loading }) => (
+        {cancelAttendance => (
           <>
             <ColoredIconButton
               buttonClass="is-danger"
               iconClass="fa-times"
-              onClick={() => {
+              onClick={() =>
                 cancelAttendance({
                   variables: {
                     slug,
                   },
                 })
-              }}
+              }
             >
               Cancel attendance
             </ColoredIconButton>
@@ -57,17 +57,17 @@ const AttendMeetupButton = ({ isAttending, slug }) => (
         mutation={ATTEND_MEETUP_MUTATION}
         refetchQueries={() => ['GetAttendance']}
       >
-        {(attendMeetup, { loading }) => (
+        {attendMeetup => (
           <ColoredIconButton
             buttonClass="is-primary"
             iconClass="fa-check"
-            onClick={async () => {
-              await attendMeetup({
+            onClick={() =>
+              attendMeetup({
                 variables: {
                   slug,
                 },
               })
-            }}
+            }
           >
             Attend this meetup
           </ColoredIconButton>
